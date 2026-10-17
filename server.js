@@ -148,6 +148,23 @@ app.post('/api/etkinlik-ekle', (req, res) => {
     });
 });
 
+app.post('/api/etkinlik-sil', (req, res) => {
+    const { id } = req.body;
+    db.run("DELETE FROM etkinlikler WHERE id = ?", [id], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ success: true });
+    });
+});
+
+app.post('/api/etkinlik-guncelle', (req, res) => {
+    const { id, baslik, tarih, aciklama } = req.body;
+    db.run("UPDATE etkinlikler SET baslik = ?, tarih = ?, aciklama = ? WHERE id = ?", 
+        [baslik, tarih, aciklama, id], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ success: true });
+    });
+});
+
 app.post('/api/kulup-guncelle', (req, res) => {
     const { id, ogretmen1, ogretmen2, baskan, yardimci } = req.body;
     db.run("UPDATE kulupler SET ogretmen1 = ?, ogretmen2 = ?, baskan = ?, yardimci = ? WHERE id = ?", 

@@ -201,14 +201,67 @@ function etkinlikleriCiz() {
         return;
     }
 
+    // Sadece öğretmen girişi yapıldığında (yönetim paneli açıkken) düzenle ve sil butonları görünür
+    const ogretmenGirisYapmis = document.getElementById('yonetimPaneli') && document.getElementById('yonetimPaneli').style.display === 'block';
+
     etkinliklerData.forEach(e => {
+        let butonlarHTML = '';
+        if (ogretmenGirisYapmis) {
+            butonlarHTML = `
+                <div style="display:flex; gap:6px; margin-top:8px;">
+                    <button class="btn btn-yesil" style="padding:4px 10px; font-size:11px; width:auto; margin:0;" onclick="etkinlikDuzenle(${e.id}, '${e.baslik}', '${e.tarih}', '${e.aciklama}')">✏️ Düzenle</button>
+                    <button class="btn btn-sil" style="padding:4px 10px; font-size:11px; width:auto; margin:0;" onclick="etkinlikSil(${e.id})">🗑️ Sil</button>
+                </div>
+            `;
+        }
+
         alan.innerHTML += `
-            <div style="background:#0f172a; border:1px solid #334155; border-left:3px solid #0284c7; padding:12px; border-radius:8px; font-size:13px;">
+            <div style="background:#0f172a; border:1px solid #334155; border-left:3px solid #0284c7; padding:12px; border-radius:8px; font-size:13px; position:relative;">
                 <b style="color:#38bdf8;">${e.baslik}</b> <span style="font-size:11px; color:#94a3b8;">(${e.kulup_adi})</span><br>
                 <span>📅 Tarih: ${e.tarih}</span><br>
                 <p style="margin:4px 0 0 0; color:#cbd5e1;">${e.aciklama}</p>
+                ${butonlarHTML}
             </div>
         `;
+    });
+}
+
+async function etkinlikSil(id) {
+    if (!confirm("Bu etkinliği silmek istediğinize emin misiniz?")) return;
+    const res = await fetch('/api/etkinlik-sil', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+    });
+    if (res.ok) {
+        alert("✅ Etkinlik silindi!");
+        veriYukle();
+    } else {
+        alert("❌ Etkinlik silinirken hata oluştu.");
+    }
+}
+
+function etkinlikDuzenle(id, eskiBaslik, eskiTarih, eskiAciklama) {
+    const yeniBaslik = prompt("Yeni Etkinlik Başlığı:", eskiBaslik);
+    if (yeniBaslik === null) return;
+    
+    const yeniTarih = prompt("Yeni Tarih (YYYY-AA-GG):", eskiTarih);
+    if (yeniTarih === null) return;
+
+    const yeniAciklama = prompt("Yeni Açıklama / Detay:", eskiAciklama);
+    if (yeniAciklama === null) return;
+
+    fetch('/api/etkinlik-guncelle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, baslik: yeniBaslik, tarih: yeniTarih, aciklama: yeniAciklama })
+    }).then(async res => {
+        if (res.ok) {
+            alert("✅ Etkinlik güncellendi!");
+            await veriYukle();
+        } else {
+            alert("❌ Güncelleme başarısız.");
+        }
     });
 }
 
@@ -224,6 +277,7 @@ async function girisYap() {
         document.getElementById('girisAlani').style.display = 'none';
         document.getElementById('yonetimPaneli').style.display = 'block';
         panelGuncelle();
+        etkinlikleriCiz(); // Öğretmen girince etkinlik butonlarının hemen görünmesini sağlar
     } else {
         alert("❌ Hatalı Şifre!");
     }
