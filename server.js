@@ -3,9 +3,8 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
-
-app.use(express.json());
+const PORT = 3002;
+    app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 const db = new sqlite3.Database('./okul.db', (err) => {
