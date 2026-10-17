@@ -174,6 +174,6 @@ app.post('/api/kulup-guncelle', (req, res) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`Sunucu ${PORT} portunda çalışıyor.`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Sunucu aktif! Bilgisayardan: http://localhost:${PORT}`);
 });

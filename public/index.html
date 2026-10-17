@@ -2,153 +2,167 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Atatürk Anadolu Lisesi — Kulüp Yönetim Portalı</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atatürk Anadolu Lisesi - Kulüp Yönetim Portalı</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>🏫 Atatürk Anadolu Lisesi — Kulüp Yönetim Portalı</h1>
+        <header>
+            <h1>🏫 Atatürk Anadolu Lisesi — Kulüp Yönetim Portalı</h1>
+            <p>Kulüp Kayıt, Akıllı Öneri ve Etkinlik Yönetim Sistemi</p>
+        </header>
 
-        <!-- İSTATİSTİK ÖZET PANELİ -->
-        <div class="istatistik-kutu">
-            <div class="stat-item">
-                <span>Okul Toplam Kapasitesi</span>
-                <h3>1000 Öğrenci</h3>
+        <!-- İstatistikler -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h4>Okul Toplam Kapasitesi</h4>
+                <span>1000 Öğrenci</span>
             </div>
-            <div class="stat-item">
-                <span>Kayıtlı Öğrenci Sayısı</span>
-                <h3 id="statToplamOgrenci">0</h3>
+            <div class="stat-card">
+                <h4>Kayıtlı Öğrenci Sayısı</h4>
+                <span id="statToplamOgrenci">0</span>
             </div>
-            <div class="stat-item">
-                <span>Aktif Kulüp Sayısı</span>
-                <h3 id="statToplamKulup">0</h3>
+            <div class="stat-card">
+                <h4>Aktif Kulüp Sayısı</h4>
+                <span id="statToplamKulup">25</span>
             </div>
-            <div class="stat-item">
-                <span>Toplam Boş Kontenjan</span>
-                <h3 id="statToplamBos">0</h3>
-            </div>
-        </div>
-
-        <div class="grid">
-            <!-- SOL KUTU: ÖĞRENCİ KAYIT & KULÜP SEÇİMİ -->
-            <div class="kutu">
-                <h2>📝 Öğrenci Kulüp Kaydı</h2>
-                <form id="ogrenciFormu">
-                    <label>Kulüp Seçin:</label>
-                    <select id="kulupSecim" required>
-                        <option value="">-- Önce Kulüpler Yükleniyor --</option>
-                    </select>
-
-                    <label>Öğrenci Adı Soyadı:</label>
-                    <input type="text" id="ogrenciAd" required placeholder="Örn: Ahmet Yılmaz">
-
-                    <label>Sınıf Seviyesi:</label>
-                    <select id="seviyeSecim" required>
-                        <option value="9">9. Sınıf</option>
-                        <option value="10">10. Sınıf</option>
-                        <option value="11">11. Sınıf</option>
-                        <option value="12">12. Sınıf</option>
-                    </select>
-
-                    <label>Şube:</label>
-                    <select id="subeSecim" required>
-                        <option value="A">A Şubesi</option>
-                        <option value="B">B Şubesi</option>
-                        <option value="C">C Şubesi</option>
-                        <option value="D">D Şubesi</option>
-                        <option value="E">E Şubesi</option>
-                        <option value="F">F Şubesi</option>
-                        <option value="G">G Şubesi</option>
-                    </select>
-
-                    <button type="submit" class="btn">Öğrenciyi Kaydet</button>
-                </form>
-            </div>
-
-            <!-- SAĞ KUTU: AKILLI ÖNERİ SİHİRBAZI -->
-            <div class="kutu" style="border-top: 4px solid #a855f7;">
-                <h2>💡 Akıllı Kulüp Öneri Sihirbazı</h2>
-                <label>İlgi Alanınızı Seçin:</label>
-                <select id="ilgiAlaniSec">
-                    <option value="Yazılım & Teknoloji">Yazılım, Kodlama & Teknoloji</option>
-                    <option value="Oyun & Sanat">Oyun, Sahne & Görsel Sanatlar</option>
-                    <option value="Akademik & Bilim">Bilim, Zeka Oyunları & Hitabet</option>
-                    <option value="Spor">Spor ve Aktif Yaşam</option>
-                    <option value="Sosyal Sorumluluk">Sosyal Sorumluluk & Çevre</option>
-                </select>
-                <button class="btn" style="background:#9333ea;" onclick="kulupOnerisiGetir()">Bana Uygun Kulüpleri Bul</button>
-                <div id="oneriSonucAlani" style="margin-top: 12px; font-size: 13px; max-height: 220px; overflow-y: auto;"></div>
+            <div class="stat-card">
+                <h4>Toplam Boş Kontenjan</h4>
+                <span id="statToplamBos">1000</span>
             </div>
         </div>
 
-        <!-- ÖĞRETMEN YÖNETİM PANELİ -->
-        <div class="kutu">
-            <h2>🔐 Öğretmen Yönetim Paneli</h2>
-            <div id="girisAlani">
-                <label>Yetkili Öğretmen Şifresi:</label>
-                <input type="password" id="sifreInput" placeholder="Yetkili şifrenizi giriniz...">
-                <button class="btn btn-yesil" onclick="girisYap()">Giriş Yap</button>
-            </div>
-
-            <div id="yonetimPaneli" style="display:none;">
-                <label>Yönetilecek Kulüp:</label>
-                <select id="yonetimKulupSec" onchange="panelGuncelle()"></select>
-
-                <label>1. Danışman Öğretmen:</label>
-                <input type="text" id="ogretmen1Ad" placeholder="Örn: Ahmet Yılmaz">
-
-                <label>2. Danışman Öğretmen:</label>
-                <input type="text" id="ogretmen2Ad" placeholder="Örn: Fatma Kaya">
+        <!-- İki Sütunlu Ana Yapı -->
+        <div class="main-grid">
+            <!-- Sol Kolon: Kayıt, Öneri ve Yönetim Paneli -->
+            <div class="left-column">
                 
-                <button class="btn btn-yesil" onclick="ogretmenleriKaydet()">Danışmanları Güncelle</button>
+                <!-- Öğrenci Kayıt Formu -->
+                <div class="panel-box">
+                    <h2>📝 Öğrenci Kulüp Kaydı</h2>
+                    <form id="ogrenciFormu">
+                        <label>Kulüp Seçin:</label>
+                        <select id="kulupSecim" required>
+                            <option value="">-- Kulüp Seçiniz --</option>
+                        </select>
 
-                <label>Kulüp Başkanı:</label>
-                <select id="baskanSec"></select>
+                        <label>Öğrenci Adı Soyadı:</label>
+                        <input type="text" id="ogrenciAd" placeholder="Örn: Ahmet Yılmaz" required>
 
-                <label>Başkan Yardımcısı:</label>
-                <select id="yardimciSec"></select>
+                        <label>Sınıf Seviyesi:</label>
+                        <select id="seviyeSecim" required>
+                            <option value="9. Sınıf">9. Sınıf</option>
+                            <option value="10. Sınıf">10. Sınıf</option>
+                            <option value="11. Sınıf">11. Sınıf</option>
+                            <option value="12. Sınıf">12. Sınıf</option>
+                        </select>
 
-                <button class="btn btn-yesil" onclick="yonetimKaydet()">Yönetim Kurulunu Güncelle</button>
+                        <label>Şube:</label>
+                        <select id="subeSecim" required>
+                            <option value="A Şubesi">A Şubesi</option>
+                            <option value="B Şubesi">B Şubesi</option>
+                            <option value="C Şubesi">C Şubesi</option>
+                            <option value="D Şubesi">D Şubesi</option>
+                            <option value="E Şubesi">E Şubesi</option>
+                        </select>
 
-                <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
+                        <button type="submit" class="btn btn-mavi">Öğrenciyi Kaydet</button>
+                    </form>
+                </div>
 
-                <h3 style="font-size:14px; color:#38bdf8;">📅 Kulüp Etkinlik & Duyuru Planla</h3>
-                <label>Etkinlik Başlığı:</label>
-                <input type="text" id="etkinlikBaslik" placeholder="Örn: Kodlama Atölyesi">
-                <label>Tarih:</label>
-                <input type="date" id="etkinlikTarih">
-                <label>Açıklama / Detay:</label>
-                <input type="text" id="etkinlikAciklama" placeholder="Etkinlik yeri ve saat bilgisi...">
-                <button class="btn" style="background:#0284c7;" onclick="etkinlikEkle()">Etkinliği Yayınla</button>
+                <!-- Akıllı Öneri Sihirbazı -->
+                <div class="panel-box">
+                    <h2>💡 Akıllı Kulüp Öneri Sihirbazı</h2>
+                    <label>İlgi Alanınızı Seçin:</label>
+                    <select id="ilgiAlaniSec">
+                        <option value="Yazılım & Teknoloji">Yazılım, Kodlama & Teknoloji</option>
+                        <option value="Akademik & Bilim">Akademik, Bilim & Zeka Oyunları</option>
+                        <option value="Oyun & Sanat">Sanat, Müzik & Tiyatro</option>
+                        <option value="Spor">Spor & Fiziksel Aktiviteler</option>
+                        <option value="Sosyal Sorumluluk">Sosyal Sorumluluk & Doğa</option>
+                    </select>
+                    <button type="button" class="btn btn-mavi" onclick="kulupOnerisiGetir()">Bana Uygun Kulüpleri Bul</button>
+                    <div id="oneriSonucAlani" style="margin-top: 15px;"></div>
+                </div>
 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; gap: 5px;">
-                    <h3 style="margin:0; font-size:14px;">📋 Üye Listesi</h3>
-                    <div>
-                        <button class="btn btn-excel" onclick="excelIndir()" style="margin-top:0; padding:6px 10px; font-size:11px; background:#16a34a; width:auto; display:inline-block;">📊 Excel İndir</button>
-                        <button class="btn btn-yazdir" onclick="listeyiYazdir()">🖨️ Yazdır</button>
+                <!-- Öğretmen Yönetim Paneli -->
+                <div class="panel-box">
+                    <h2>🔒 Öğretmen Yönetim Paneli</h2>
+                    <div id="girisAlani">
+                        <label>Yetkili Öğretmen Şifresi:</label>
+                        <input type="password" id="sifreInput" placeholder="Yetkili şifrenizi giriniz...">
+                        <button type="button" class="btn btn-yesil" onclick="girisYap()">Giriş Yap</button>
+                    </div>
+
+                    <div id="yonetimPaneli" style="display: none;">
+                        <label>Yönetilecek Kulübü Seçin:</label>
+                        <select id="yonetimKulupSec" onchange="panelGuncelle()"></select>
+
+                        <hr style="margin: 15px 0; border-color: var(--border-color);">
+
+                        <h3>👨‍🏫 Danışman Öğretmen Atama</h3>
+                        <label>1. Danışman Öğretmen:</label>
+                        <input type="text" id="ogretmen1Ad" placeholder="1. Öğretmen Adı">
+                        <label>2. Danışman Öğretmen:</label>
+                        <input type="text" id="ogretmen2Ad" placeholder="2. Öğretmen Adı">
+                        <button type="button" class="btn btn-mavi" onclick="ogretmenleriKaydet()">Danışmanları Kaydet</button>
+
+                        <hr style="margin: 15px 0; border-color: var(--border-color);">
+
+                        <h3>👑 Öğrenci Yönetimi & Temsilciler</h3>
+                        <label>Kulüp Başkanı:</label>
+                        <select id="baskanSec"></select>
+                        <label>Başkan Yardımcısı:</label>
+                        <select id="yardimciSec"></select>
+                        <button type="button" class="btn btn-mavi" onclick="yonetimKaydet()">Temsilcileri Kaydet</button>
+
+                        <hr style="margin: 15px 0; border-color: var(--border-color);">
+
+                        <h3>👥 Kulüp Öğrenci Listesi</h3>
+                        <input type="text" id="ogrenciArama" placeholder="Öğrenci veya sınıf ara..." onkeyup="ogrenciFiltrele()">
+                        <div id="ogrenciListe" style="margin-top: 10px;"></div>
+
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button type="button" class="btn btn-mavi" onclick="excelIndir()">📊 CSV İndir</button>
+                            <button type="button" class="btn btn-yesil" onclick="listeyiYazdir()">🖨️ Resmi Yazdır</button>
+                        </div>
+
+                        <hr style="margin: 15px 0; border-color: var(--border-color);">
+
+                        <h3>📢 Etkinlik / Duyuru Ekle</h3>
+                        <label>Etkinlik Başlığı:</label>
+                        <input type="text" id="etkinlikBaslik" placeholder="Örn: Kodlama Atölyesi">
+                        <label>Tarih:</label>
+                        <input type="date" id="etkinlikTarih">
+                        <label>Açıklama:</label>
+                        <textarea id="etkinlikAciklama" rows="2" placeholder="Etkinlik detayları..."></textarea>
+                        <button type="button" class="btn btn-yesil" onclick="etkinlikEkle()">Etkinliği Yayınla</button>
                     </div>
                 </div>
 
-                <input type="text" id="ogrenciArama" placeholder="Listede öğrenci ara..." onkeyup="ogrenciFiltrele()" style="margin-top: 8px;">
-                <div id="ogrenciListe"></div>
             </div>
-        </div>
 
-        <!-- YAKLAŞAN ETKİNLİKLER -->
-        <div class="kutu">
-            <h2>📅 Yaklaşan Kulüp Etkinlikleri & Duyurular</h2>
-            <div id="etkinlikListesi" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-top: 12px;"></div>
-        </div>
+            <!-- Sağ Kolon: Kulüp Kartları & Etkinlik Takvimi -->
+            <div class="right-column">
+                
+                <!-- Etkinlikler ve Duyurular -->
+                <div class="panel-box">
+                    <h2>📅 Etkinlikler ve Duyurular</h2>
+                    <div id="etkinlikListesi" style="display: flex; flex-direction: column; gap: 10px;"></div>
+                </div>
 
-        <!-- KULÜP LİSTESİ VE ARAMA ÇUBUĞU -->
-        <div class="kutu">
-            <h2>🔍 Okul Kulüpleri ve Detayları</h2>
-            <input type="text" id="kulupArama" placeholder="Kulüp ara (Örn: siber, yazılım, satranç)..." onkeyup="kulupFiltrele()" style="margin-bottom: 12px;">
-            <!-- EKSİK OLAN VE ARAMAYI ÇALIŞTIRAN KRİTİK ALAN BURASIYDI: -->
-            <div id="kulupKartlari" class="kulup-grid"></div>
+                <!-- Kulüpler Listesi -->
+                <div class="panel-box">
+                    <h2>🏫 Okul Kulüpleri</h2>
+                    <input type="text" id="kulupArama" placeholder="Kulüp veya kategori ara..." onkeyup="kulupFiltrele()" style="margin-bottom: 15px;">
+                    <div id="kulupKartlari" class="kulup-grid"></div>
+                </div>
+
+            </div>
         </div>
     </div>
 
-    <script src="js/app.js"></script>
+    <script src="/js/app.js"></script>
 </body>
 </html>
